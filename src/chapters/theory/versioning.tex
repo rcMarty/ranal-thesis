@@ -25,18 +25,40 @@ Další vlastností VCS je možnost pracování více uživatelů na stejných s
 \end{figure}
 
 Základní ideální struktura v rámci grafu je lineární graf. tj řada bodů za sebou kde každá další vychází z té předchozí.
-Projekt má nějaký hlavní kořen (Trunk) (\imageref{svg:revision_controlled_project_visualization}) a z něj se poté větví ostatní větve (Branches) například pro vývoj nové funkcionality. Větve se poté slučují dokupy (Merges) a tím vznikají nové verze projektu. Z pohledu grafu se pak jedná o acyklický orientovaný graf. Samozřejmě může se ukázat že noě vyvíjená funkcionalita je nevyhovující a tak vzniká mrtvá větev (Discontnued development branch). Když už je kýžený počet změn v hlavní větvi tak se dělá tzv. tagování (Tags). Tag většinou ozačuje novou verzi projektu nebo označuje nějaký důležitý milník.
+Projekt má nějaký hlavní kořen (Trunk) \imageref{svg:revision_controlled_project_visualization} a z něj se poté větví ostatní větve (Branches) například pro vývoj nové funkcionality. Větve se poté slučují dokupy (Merges) a tím vznikají nové verze projektu. Z pohledu grafu se pak jedná o acyklický orientovaný graf. Samozřejmě může se ukázat že noě vyvíjená funkcionalita je nevyhovující a tak vzniká mrtvá větev (Discontnued development branch). Když už je kýžený počet změn v hlavní větvi tak se dělá tzv. tagování (Tags). Tag většinou ozačuje novou verzi projektu nebo označuje nějaký důležitý milník.
 
 \subsection{Centrální vs distribuované VCS}
 \label{sec:vcs}
-
+Hlavní rozdíl mezi centríálními a distribuovanými je v tom že distribuované VCS většinou uchovávají historii jak u každého uživatele tak i na hostovací službě.
 
 \subsection{Apache Subversion}
 \label{sec:svn}
-Apache subversion (zkráceně SVN) je \ref{sec:vcs} který vznikl v roce 2004 jako náhrada pro CVS. Jendá se o open-source centralizovaný verzovací systém 
+Apache subversion (zkráceně SVN) je VCS, který vznikl v roce 2004 jako náhrada pro CVS. Jendá se o open-source centralizovaný verzovací systém.
+
+Jeho hlavní implementační specifika jsou atomické revize a transakce, větvení za pomocí "Cheap copies", versování adresářů a metadat, podpora pro binární soubory, podpora neslučitelných soborů, a přístup k datům přes HTTP, HTTPS a SVN protokol.
+
+\subsubsection*{Globální revize a transakce}
+SVN používá globální revize napříč všemi soubory. U starších systémů byly nezávislé revize pouze pro daný soubor neboli každý soubor mměl svou historii a číslo revize. 
+
+Každý zápis do repositáře je atomický a je zapsán jako jedna revize napříč všemi soubory. To znamená že buď se zápis provede celý nebo se neprovede vůbec.
+Revize má jeden identifikátor který reprezentuje stav celého repositáře.
+
+\subsubsection*{Větvení za pomocí cheap copies}
+Větev v svn nemá v sobě žádnou pseciální reprezentaci větve. Větve jsou dělány na úrovni uživatelů pomocí adresářové struktury (tipicky /branches, /tags, /trunk).
+
+u větvení se kopíruje pomocí \code{svn copy}. Interně nedochází k fyzické duplikaci dat ale pouze se vytvoří symbolický odkaz na původní data v dané revizi. Tvorba nové větve nebo revize je tímto způsobem velice rychlá.
+
+\subsubsection*{Verzování adresářů a metadat}
+SVN odstranuje nedostatek ostatních sytémů které verzovaly pouze obsah a ne strukturu adresářů. 
+
+Přesuny, přejmenovávání a kopírování souborů je verzované a stále zachovávají návaznost na historii souboru. SVN taktéž umožnuje k adresáři připojit metadata ve formátu klíč:hodnota (např. \code{svn:ignore}, \code{svn:externals}). Tyto metadata jsou samozřejmě taky verzovaná stejně jako obsah souborů.
 
 
-\section{Git}
+\subsubsection*{}
+
+
+
+\subsection{Git}
 
 
 \subsection{programovatelný přístup k git}
