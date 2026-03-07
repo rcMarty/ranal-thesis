@@ -88,6 +88,12 @@ Abstract Ranalu but in english.
 
 \newcommand{\todo}[1]{\noindent\textcolor{red}{TODO: #1}}
 
+% Custom command for inline code snippets
+\definecolor{codegray}{gray}{0.95}
+\newcommand{\code}[1]{%
+    \fcolorbox{black}{codegray}{\texttt{#1}}%
+}
+
 % Hide columns in tables
 \newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
 

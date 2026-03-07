@@ -1,23 +1,27 @@
-name: Compile LaTeX (Master)
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+name: Compile LaTeX
 
 on:
   push:
   pull_request:
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   build-latex:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Compiling LaTeX documents
+      - name: Set up Xvfb
+        run: |
+          sudo apt-get install -y xvfb
+          sudo Xvfb :99 -ac -screen 0 1024x768x8 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+
       - name: Compiling LaTeX documents
         uses: xu-cheng/latex-action@v4
         with:
@@ -25,22 +29,103 @@ jobs:
           working_directory: src
           args: -pdf -halt-on-error -synctex=1 -interaction=nonstopmode --shell-escape --enable-write18
           extra_system_packages: 'inkscape openjdk17'
-          docker_image: ghcr.io/xu-cheng/texlive-full:20240315
+          latexmk_use_xelatex: true
 
-      - name: Prepare GitHub Pages publish dir
-        run: |
-          mkdir -p public
-          cp src/main.pdf public/
-
-      - name: Upload artifact (PDF)
+      - name: Upload LaTeX PDF artifact
         uses: actions/upload-artifact@v4
         with:
           name: thesis-pdf
           path: src/main.pdf
+          if-no-files-found: error
+
+  publish-release:
+    needs: build-latex
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - name: Download PDF artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: thesis-pdf
+          path: src
+
+      - name: Publish PDF to GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: latest
+          name: Latest Thesis PDF
+          body: Automatically updated thesis PDF from `${{ github.ref_name }}`.
+          allowUpdates: true
+          removeArtifacts: true
+          artifacts: src/main.pdf
+
+  publish-revision-release:
+    needs: build-latex
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/revision-')
+    steps:
+      - name: Download PDF artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: thesis-pdf
+          path: src
+
+      - name: Publish PDF to revision release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: revision-latest
+          name: Latest Revision Thesis PDF
+          body: Automatically updated thesis PDF from `${{ github.ref_name }}`.
+          allowUpdates: true
+          removeArtifacts: true
+          artifacts: src/main.pdf
+          prerelease: true
+          makeLatest: false
+
+  publish-pages:
+    needs: build-latex
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download PDF artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: thesis-pdf
+          path: src
+
+      - name: Build GitHub Pages site
+        run: |
+          mkdir -p pages
+          cp src/main.pdf pages/main.pdf
+          cat > pages/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width,initial-scale=1" />
+            <title>Thesis PDF</title>
+            <style>
+              html, body { margin: 0; height: 100%; background: #111; }
+              object { width: 100%; height: 100%; border: 0; }
+            </style>
+          </head>
+          <body>
+            <object data="main.pdf" type="application/pdf">
+              <p>Unable to display PDF in browser.
+              <a href="main.pdf">Download the thesis PDF</a>.</p>
+            </object>
+          </body>
+          </html>
+          HTML
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pages
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        if: "github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'"
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: public
+        id: deployment
+        uses: actions/deploy-pages@v4
