@@ -1,0 +1,137 @@
+\documentclass[czech,master]{resources/diploma/diploma}
+
+% Sablonove baliky
+\usepackage[autostyle=true,czech=quotes]{csquotes} % korektni sazba uvozovek, podpora pro balik biblatex
+\usepackage[backend=biber, style=iso-numeric, alldates=iso]{biblatex} % bibliografie
+\usepackage{dcolumn} % sloupce tabulky s ciselnymi hodnotami
+\usepackage{subfig} % makra pro "podobrazky" a "podtabulky"
+
+% Moje baliky
+\usepackage{float} % lepsi umistovani obrazku (H)
+\usepackage{glossaries} % balik pro praci s odbornymi pojmy
+\usepackage{hyperref} % vkladani hypertextovych odkazu
+\usepackage{xurl} % zalomeni dlouhych URL
+\usepackage{tablefootnote} % poznámky pod tabulkou
+\usepackage{color} % barvickyy
+\usepackage{array} % schovavani sloupcu v tabulkach
+\usepackage[linesnumbered,tworuled,vlined]{algorithm2e} % pseudokod
+\usepackage{acro} % balík pro lepší práci s akronymy
+\usepackage{svg} % pro vkládání SVG obrázků
+
+% Pozadovane vstupy pro generovani titulnich stran.
+\ThesisAuthor{Martin Korotwitschka}
+\ThesisSupervisor{Ing. Jakub Beránek}
+
+\CzechThesisTitle{Monitoring komplexních GitHub repozitářů}
+\EnglishThesisTitle{Monitoring of Complex GitHub Repositories}
+
+\SubmissionYear{2026}
+
+\ThesisAssignmentFileName{../ThesisSpecification_KOR0289.pdf}
+
+\Acknowledgement{%
+Děkuji, že mám ještě tolik času na dokončení této práce.
+}
+
+\CzechAbstract{%
+Abstract Ranalu
+}
+\CzechKeywords{git, github, rust, monitoring }
+
+\EnglishAbstract{%
+Abstract Ranalu but in english.
+}
+\EnglishKeywords{git, github, rust, monitoring }
+
+\input{./resources/acronyms.tex}
+\addbibresource{resources/sauce.bib}
+
+
+% Minted things
+\let\NewCommand\newcommand{}
+% \immediate\write18{echo $ROAD > .ROAD.tex}
+% \immediate\write18{echo $ROAD "nejhorší hack by žožka"}
+% \input{.ROAD}
+% \immediate\write18{export TEXMF_OUTPUT_DIRECTORY=\ROAD}
+
+
+\usepackage{minted} %
+\setminted{fontsize=\fontsize{9}{11}\selectfont, baselinestretch=1, frame=lines, framesep=8pt, linenos, breaklines}
+\renewcommand\listingscaption{Výpis}
+\renewcommand\listoflistingscaption{Seznam výpisů zdrojového kódu}
+
+% Algorithm2e settings
+% \DontPrintSemicolon
+% \SetAlgoNoEnd
+% \NoCaptionOfAlgo
+% \SetKwProg{Fn}{Function}{:}{}
+% \SetKwProg{return}{Return}{:}{}
+% \SetKwData{True}{true}
+% \SetKwData{False}{false}
+% \SetKwFunction{FSwap}{Swap}
+% \SetKwFunction{FLength}{Length}
+% \newcommand{\bl}{\BlankLine}
+
+% Uprava hloubky obsahu - pozdeji smazat !
+\setcounter{tocdepth}{3}
+
+% Custom reference
+\newcommand{\customref}[2]{\hyperref[#2]{#1~\ref*{#2}}}
+\newcommand{\chapterref}[1]{(\hyperref[#1]{Kapitola~\ref*{#1}})}
+\newcommand{\imageref}[1]{(\hyperref[#1]{Obrázek~\ref*{#1}})}
+\newcommand{\tableref}[1]{(\hyperref[#1]{Tabulka~\ref*{#1}})}
+\newcommand{\listingref}[1]{(\hyperref[#1]{Výpis~\ref*{#1}})}
+\newcommand{\glsref}[1]{\textit{\gls{#1}}}
+\newcommand{\gameref}[1]{\textit{#1}}
+\newcommand{\attr}[1]{(\texttt{#1})}
+\newcommand{\devTool}[2]{\textit{#1}\footnote{\href{#2}{#2}}}
+
+\newcommand{\todo}[1]{\noindent\textcolor{red}{TODO: #1}}
+
+% Hide columns in tables
+\newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}
+
+
+% Zacatek dokumentu
+\begin{document}
+
+% Titulni strany
+\MakeTitlePages
+
+% Seznam obrazku
+\listoffigures
+\clearpage
+
+% Seznam tabulek
+\listoftables
+\clearpage
+
+% Seznam výpisů zdrojového kódu
+\addcontentsline{toc}{chapter}{Seznam výpisů zdrojového kódu}
+\listoflistings
+\clearpage
+
+% Text
+\input{./chapters/introduction.tex}
+
+
+\input{./chapters/theory/versioning.tex}
+\input{./chapters/theory/github.tex}
+\input{./chapters/theory/existing_tools.tex}
+\input{./chapters/theory/used_technologies.tex}
+\input{./chapters/theory/rust_repository.tex}
+
+\input{./chapters/implementation/design.tex}
+\input{./chapters/implementation/implementation.tex}
+\input{./chapters/implementation/evaluation.tex}
+
+
+\input{./chapters/conclusion.tex}
+
+% Seznam literatury
+\printbibliography[title={Literatura}, heading=bibintoc]
+
+% Přílohy
+\appendix
+
+\end{document}

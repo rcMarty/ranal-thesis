@@ -1,0 +1,39 @@
+# Osnova DP
+- Úvod
+- Verzování softwaru
+    - Verzování (co to je, jaké jsou systémy, hostované git služby)
+    - git (commity, repozitáře, větve, autoři commitů, modifikované soubory), struktura souborů na disku (bloby, git databáze), programovatelný přístup (libgit2 API)
+- GitHub
+    - Jaké to má featury, jak vypadá contribution workflow, forky, PR, PR labely, CI workflows
+    - GitHub API (REST API, GraphQl, rate limity, autentizace, webhooky)
+- Existující nástroje
+    - https://curl.se/dashboard.html
+    - https://rust-lang.github.io/rustc-pr-tracking/
+- Použité technologie (možná vynechat?)
+    - Rust, sqlx, Rust se dobře distribuuje (statická binárka), zároveň lze použít jako knihovnu (C ABI, WebAssembly)
+    - TypeScript, Vue
+    - Grafana
+- Repozitář Rust překladače
+    - Konkrétní use-case
+    - Chceme sledovat `rust-lang/rust`, který má spoustu PR, je integrovaný s team API, popsat jednoduše API, jaké se tam používají labely a k čemu.
+- Návrh
+    - Seznam požadavků (kombinovat git + github + team API data, inkrementalita, vizualizace, dotazy v DB), zvládat velké repozitáře, sledovat repozitáře v průběhu času, jednoduché nasazení, backfilling, možnost použití jako knihovny, znovunačítání dat (team API), sledování stavu pull requestů v čase
+    - Diagram architektury
+    - Popis dotazů - vyjmenovat několik základních dotazů, a popsat, z jakých zdrojů dat budou čerpat
+    - Struktura databáze - diagram
+
+- Implementace
+     - Postgres vs SQLite (jednodušší lokální deploy, ale horší cloud deploy)
+    - Popsat špeky, jak se vyhnout GH rate limitům, jak udělat načítání inkrementálně, jak řešit webhooky vs timeline events, kombinace GitHub API + git repo (proč některé věci netahat z GitHub API - limity)
+    - Popis DB schématu - proč to bylo navrženo tak, jak to je?
+    - async věci?
+    - Dotazy (ukázka zajímavých SQL dotazů)
+    - Zobrazování dat - Grafana vs Vue grafy
+        - screenshot(y), jak to vypadá
+- Evaluace
+    - Začnu s prázdnými daty, chci načíst `rust-lang/rust` - jak dlouho to trvá? Kolik GH API requestů spotřebuju? Když dojde ke změně, za jak dlouho se objeví v dashboardu? Jak často si můžu dovolit updatovat data? Jak dlouho trvá "jeden inkrementální update"?
+    - Měření SQL dotazů: data z `rust-lang/rust`, jak dlouho trvá konkrétních 5 dotazů? Pomáhají indexy? `EXPLAIN ANALYZE` výstup.
+- Závěr
+    - Shrnutí dosažených výsledků
+    - Diskuze o výzvách a omezeních práce
+    - Možnosti dalšího rozvoje a výzkumu

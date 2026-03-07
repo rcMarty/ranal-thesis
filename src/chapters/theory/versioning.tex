@@ -1,0 +1,44 @@
+% - Verzování softwaru
+%     - Verzování (co to je, jaké jsou systémy, hostované git služby)
+%     - git (commity, repozitáře, větve, autoři commitů, modifikované soubory), struktura souborů na disku (bloby, git databáze), programovatelný přístup (libgit2 API)
+
+\chapter{Versování}
+\label{sec:versioning}
+
+tato kapitola se bude věnovat versování a jeho významu pro vývoj a údržbu. Taktéž se bude věnovat konkrétnímu versovacímu nástroji git, jeho funkcím a jeho programovatelnému přístupu.
+
+\section{Versování software}
+Versování je proces správy a sledování změn v projektu. V tomto procesu se uchovává historie veškerých změn v rámci souborů které jsou versovány. Nejšastěji se takovéto nástroje používají u textových zdrojových kodu softwaru. 
+
+Sytém správy verzí (VCS) \todo{aconym} obvykle eviduje kdo změnil jaký soubor a co konkrétního v tom souboru změnil. Díky tomu lze kdykoliv dohledat kdo napsal jakou část kodu případně proč byla tato část změněna. Proto u VCS lze ryhle vrátit zpět změny které by se ukázaly jako nevhodné.
+
+VCS řeší problém historie změn kdy před VCS bylo nutné uchovávat mnoho kopií téhož projektu s rúznými značkami o jakou verzi se jedná a to může vyžadovat nadměrně velkou disciplínu. Taktéž je vyžadováno o hodně více úložiště. U vcs často jsou ukládány pouze reálné změny oproti předchozí verzi a ne celá kopie projektu a jsou spravovány interně pouze VCS takže uživateli odpadne starost s organizací a ukládáním verzí.
+
+Další vlastností VCS je možnost pracování více uživatelů na stejných souborech. Vzhledem k tomu že VCS umožnuje řešit konflikty (takzvané merge konflikty) které vzniknou při změně stejného souboru více uživateli
+
+
+\begin{figure}[ht]
+	\centering
+	\includesvg[height=\textwidth]{figures/revision_controlled_project_visualization.svg}
+	\caption{Příklad historie projektu řízené verzovacím systémem.}
+	\label{svg:revision_controlled_project_visualization}
+\end{figure}
+
+Základní ideální struktura v rámci grafu je lineární graf. tj řada bodů za sebou kde každá další vychází z té předchozí.
+Projekt má nějaký hlavní kořen (Trunk) (\imageref{svg:revision_controlled_project_visualization}) a z něj se poté větví ostatní větve (Branches) například pro vývoj nové funkcionality. Větve se poté slučují dokupy (Merges) a tím vznikají nové verze projektu. Z pohledu grafu se pak jedná o acyklický orientovaný graf. Samozřejmě může se ukázat že noě vyvíjená funkcionalita je nevyhovující a tak vzniká mrtvá větev (Discontnued development branch). Když už je kýžený počet změn v hlavní větvi tak se dělá tzv. tagování (Tags). Tag většinou ozačuje novou verzi projektu nebo označuje nějaký důležitý milník.
+
+\subsection{Centrální vs distribuované VCS}
+\label{sec:vcs}
+
+
+\subsection{Apache Subversion}
+\label{sec:svn}
+Apache subversion (zkráceně SVN) je \ref{sec:vcs} který vznikl v roce 2004 jako náhrada pro CVS. Jendá se o open-source centralizovaný verzovací systém 
+
+
+\section{Git}
+
+
+\subsection{programovatelný přístup k git}
+
+\endinput
