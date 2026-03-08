@@ -4,63 +4,116 @@
 
 \chapter{Versování}
 \label{sec:versioning}
-
-tato kapitola se bude věnovat versování a jeho významu pro vývoj a údržbu. Taktéž se bude věnovat konkrétnímu versovacímu nástroji git, jeho funkcím a jeho programovatelnému přístupu.
+	Tato kapitola se bude věnovat versování a jeho významu pro vývoj a údržbu. Taktéž se bude věnovat konkrétnímu versovacímu nástroji git, jeho funkcím a jeho programovatelnému přístupu.
 
 \section{Versování software}
-Versování je proces správy a sledování změn v projektu. V tomto procesu se uchovává historie veškerých změn v rámci souborů které jsou versovány. Nejšastěji se takovéto nástroje používají u textových zdrojových kodu softwaru. 
+	Versování je proces správy a sledování změn v projektu. V tomto procesu se uchovává historie veškerých změn v rámci souborů které jsou versovány. Nejšastěji se takovéto nástroje používají u textových zdrojových kodu softwaru. 
 
-Sytém správy verzí (VCS) \todo{aconym} obvykle eviduje kdo změnil jaký soubor a co konkrétního v tom souboru změnil. Díky tomu lze kdykoliv dohledat kdo napsal jakou část kodu případně proč byla tato část změněna. Proto u VCS lze ryhle vrátit zpět změny které by se ukázaly jako nevhodné.
+	Sytém správy verzí (VCS) \todo{aconym} obvykle eviduje kdo změnil jaký soubor a co konkrétního v tom souboru změnil. Díky tomu lze kdykoliv dohledat kdo napsal jakou část kodu případně proč byla tato část změněna. Proto u VCS lze ryhle vrátit zpět změny které by se ukázaly jako nevhodné.
 
-VCS řeší problém historie změn kdy před VCS bylo nutné uchovávat mnoho kopií téhož projektu s rúznými značkami o jakou verzi se jedná a to může vyžadovat nadměrně velkou disciplínu. Taktéž je vyžadováno o hodně více úložiště. U vcs často jsou ukládány pouze reálné změny oproti předchozí verzi a ne celá kopie projektu a jsou spravovány interně pouze VCS takže uživateli odpadne starost s organizací a ukládáním verzí.
+	VCS řeší problém historie změn kdy před VCS bylo nutné uchovávat mnoho kopií téhož projektu s rúznými značkami o jakou verzi se jedná a to může vyžadovat nadměrně velkou disciplínu. Taktéž je vyžadováno o hodně více úložiště. U vcs často jsou ukládány pouze reálné změny oproti předchozí verzi a ne celá kopie projektu a jsou spravovány interně pouze VCS takže uživateli odpadne starost s organizací a ukládáním verzí.
 
-Další vlastností VCS je možnost pracování více uživatelů na stejných souborech. Vzhledem k tomu že VCS umožnuje řešit konflikty (takzvané merge konflikty) které vzniknou při změně stejného souboru více uživateli
-
-
-\begin{figure}[ht]
-	\centering
-	\includesvg[height=\textwidth]{figures/Revision_controlled_project_visualization.svg}
-	\caption{Příklad historie projektu řízené verzovacím systémem.}
-	\label{svg:revision_controlled_project_visualization}
-\end{figure}
-
-Základní ideální struktura v rámci grafu je lineární graf. tj řada bodů za sebou kde každá další vychází z té předchozí.
-Projekt má nějaký hlavní kořen (Trunk) \imageref{svg:revision_controlled_project_visualization} a z něj se poté větví ostatní větve (Branches) například pro vývoj nové funkcionality. Větve se poté slučují dokupy (Merges) a tím vznikají nové verze projektu. Z pohledu grafu se pak jedná o acyklický orientovaný graf. Samozřejmě může se ukázat že noě vyvíjená funkcionalita je nevyhovující a tak vzniká mrtvá větev (Discontnued development branch). Když už je kýžený počet změn v hlavní větvi tak se dělá tzv. tagování (Tags). Tag většinou ozačuje novou verzi projektu nebo označuje nějaký důležitý milník.
-
-\subsection{Centrální vs distribuované VCS}
-\label{sec:vcs}
-Hlavní rozdíl mezi centríálními a distribuovanými je v tom že distribuované VCS většinou uchovávají historii jak u každého uživatele tak i na hostovací službě.
-
-\subsection{Apache Subversion}
-\label{sec:svn}
-Apache subversion (zkráceně SVN) je VCS, který vznikl v roce 2004 jako náhrada pro CVS. Jendá se o open-source centralizovaný verzovací systém.
-
-Jeho hlavní implementační specifika jsou atomické revize a transakce, větvení za pomocí "Cheap copies", versování adresářů a metadat, podpora pro binární soubory, podpora neslučitelných soborů, a přístup k datům přes HTTP, HTTPS a SVN protokol.
-
-\subsubsection*{Globální revize a transakce}
-SVN používá globální revize napříč všemi soubory. U starších systémů byly nezávislé revize pouze pro daný soubor neboli každý soubor mměl svou historii a číslo revize. 
-
-Každý zápis do repositáře je atomický a je zapsán jako jedna revize napříč všemi soubory. To znamená že buď se zápis provede celý nebo se neprovede vůbec.
-Revize má jeden identifikátor který reprezentuje stav celého repositáře.
-
-\subsubsection*{Větvení za pomocí cheap copies}
-Větev v svn nemá v sobě žádnou pseciální reprezentaci větve. Větve jsou dělány na úrovni uživatelů pomocí adresářové struktury (tipicky /branches, /tags, /trunk).
-
-u větvení se kopíruje pomocí \code{svn copy}. Interně nedochází k fyzické duplikaci dat ale pouze se vytvoří symbolický odkaz na původní data v dané revizi. Tvorba nové větve nebo revize je tímto způsobem velice rychlá.
-
-\subsubsection*{Verzování adresářů a metadat}
-SVN odstranuje nedostatek ostatních sytémů které verzovaly pouze obsah a ne strukturu adresářů. 
-
-Přesuny, přejmenovávání a kopírování souborů je verzované a stále zachovávají návaznost na historii souboru. SVN taktéž umožnuje k adresáři připojit metadata ve formátu klíč:hodnota (např. \code{svn:ignore}, \code{svn:externals}). Tyto metadata jsou samozřejmě taky verzovaná stejně jako obsah souborů.
+	Další vlastností VCS je možnost pracování více uživatelů na stejných souborech. Vzhledem k tomu že VCS umožnuje řešit konflikty (takzvané merge konflikty) které vzniknou při změně stejného souboru více uživateli
 
 
-\subsubsection*{}
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[height=\textwidth]{figures/vcs/Revision_controlled_project_visualization.pdf}
+		\caption{Příklad historie projektu řízené verzovacím systémem.}
+		\label{svg:revision_controlled_project_visualization}
+	\end{figure}
+
+	Základní ideální struktura v rámci grafu je lineární graf. tj řada bodů za sebou kde každá další vychází z té předchozí.
+	Projekt má nějaký hlavní kořen (Trunk) \imageref{svg:revision_controlled_project_visualization} a z něj se poté větví ostatní větve (Branches) například pro vývoj nové funkcionality. Větve se poté slučují dokupy (Merges) a tím vznikají nové verze projektu. Z pohledu grafu se pak jedná o acyklický orientovaný graf. Samozřejmě může se ukázat že noě vyvíjená funkcionalita je nevyhovující a tak vzniká mrtvá větev (Discontnued development branch). Když už je kýžený počet změn v hlavní větvi tak se dělá tzv. tagování (Tags). Tag většinou ozačuje novou verzi projektu nebo označuje nějaký důležitý milník.
+
+	\subsection{Centrální vs distribuované VCS}
+	\label{sec:vcs}
+		Hlavní rozdíl mezi centríálními a distribuovanými je v tom že distribuované VCS uchovávají historii jak u každého uživatele tak i na hostovací službě.
+
+		U centrálního VCS se musí pouze spoléhat na hostovací službu a když ta vypadne tak v lepším případě uživatelé nemohou publikovat své změny a v horším případě se ztrácí historie pokud neexistují zálohy serveru. U distribuovaného VCS stačí aby nějaký z uživatelů měl projekt k dispozici protože každý uživatel co má projekt stažený má i dá se říci verzi zálohy s kompletní historií a jednoduše se může obnovit nebo znovu nasadit na jakoukoli jinou hostovací službu.
+
+		Samozřejmě jsou rozdíly i k přístupu k repositáři. U centrálního VCS například příkaz \\ \code{svn commit} se aktualizujou přímo data na serveru zatím co u distribuovaného VCS (v tomtp řípadě gitu) příkaz \code{git commit} provede změny pouzev aktuálním lokálním repositáři. A až příkaz \code{git push} veškeré doteď commitnuté a nepropsané věci zapíše na hostovací službu. Tedy u centrálního VCS musíme být připojení k serveru pokud chceme publikovat změny zatímco u distribuovaného nemusíme. 
+
+		Za zmínku stojí že příkaz \code{git pull} jsou dvě operace v jedné. Nejdříve se stáhnou změny ze serveru a poté se sloučí změny s lokálními změnami. Nejde tedy o opak k příkazu \code{git push}.
+
+		\begin{figure}[]
+			\centering
+			\subfloat[Centralizované VCS]{\label{fig:centralized_vcs}\includegraphics[width=0.45\textwidth]{figures/vcs/central-version-control.pdf}}
+			\hfill
+			\subfloat[Distribuované VCS]{\label{fig:distributed_vcs}\includegraphics[width=0.45\textwidth]{figures/vcs/distributed-version-control.pdf}}
+			\caption{Porovnání centralizované a distribuované architektury verzovacích systémů}
+			\label{fig:vcs_comparison}
+		\end{figure} 
+
+		Rozdíl je i u toho jak se řeší konflikty a slučování větví. Centralizovaný VCS umožnuje provést aktualizaci ze serveru ikdyž uživatel má rozpracované neuložené soubory a systém automaticky smíchá všechny změny což může vést ke konfliktům. Distribuované VCS donutí uživatele nejdříve provést \code{commit}, tím se zapíšou změny od uživatele do historie a poté se může provést \code{merge} mezi dvěma pevnými body historie a vzniká nový pevný bod historie.
 
 
 
-\subsection{Git}
+	\subsection{Apache Subversion}
+	\label{sec:svn}
+		Apache subversion (zkráceně SVN) je VCS, který vznikl v roce 2004 jako náhrada pro Concurrent Versioning System. Jendá se o open-source centralizovaný verzovací systém.
+
+			Jeho hlavní implementační specifika jsou atomické revize a transakce, větvení za pomocí "Cheap copies", versování adresářů a metadat, podpora pro binární soubory, podpora neslučitelných soborů, a přístup k datům přes HTTP, HTTPS a SVN protokol.
+
+			\subsubsection*{Globální revize a transakce}
+			SVN používá globální revize napříč všemi soubory. U starších systémů byly nezávislé revize pouze pro daný soubor neboli každý soubor mměl svou historii a číslo revize. 
+
+			Každý zápis do repositáře je atomický a je zapsán jako jedna revize napříč všemi soubory. To znamená že buď se zápis provede celý nebo se neprovede vůbec.
+			Revize má jeden identifikátor který reprezentuje stav celého repositáře.
+
+			\subsubsection*{Větvení za pomocí cheap copies}
+			Větev v svn nemá v sobě žádnou pseciální reprezentaci větve. Větve jsou dělány na úrovni uživatelů pomocí adresářové struktury (tipicky /branches, /tags, /trunk).
+
+			u větvení se kopíruje pomocí \code{svn copy}. Interně nedochází k fyzické duplikaci dat ale pouze se vytvoří symbolický odkaz na původní data v dané revizi. Tvorba nové větve nebo revize je tímto způsobem velice rychlá.
+
+			\subsubsection*{Verzování adresářů a metadat}
+			SVN odstranuje nedostatek ostatních sytémů které verzovaly pouze obsah a ne strukturu adresářů. 
+
+			Přesuny, přejmenovávání a kopírování souborů je verzované a stále zachovávají návaznost na historii souboru. SVN taktéž umožnuje k adresáři připojit metadata ve formátu klíč:hodnota (např. \code{svn:ignore}, \code{svn:externals}). Tyto metadata jsou samozřejmě taky verzovaná stejně jako obsah souborů.
 
 
-\subsection{programovatelný přístup k git}
+			\subsubsection*{Optimalizace pro jakékoliv soubory}
+			Systém byl navržen tak že umí efektivně porovnávat i jakékoliv jiné soubory než jen textové. U binárních souborů se ukládají pouze změny oproti předchozí revizi a ne celá kopie souboru.  To jiným dřívějším souborům dělalo potíže.
+
+			\subsubsection*{Podpora pro neslučitelné soubory}
+			Při vývoji se může stát že pracujeme se soubory které algoritmicky sloučit nelze jako jsou například obrázky nebo zkompilované binární soubory. SVN umožnuje zamknout tyto soubory na púrovni serveru aby ostatní uživatelé je nemohli přepisovat dokud se tento zámek zase neuvolní.
+
+			\subsubsection*{Přístup k datům}
+			SVN nabízí flexibilní metoddy přístupu jak přes HTTP/HTTPS obohacené o verzovací funkce tak i přes vlastní svnserve protokol běžící nad tcpip a lehčí než http/https
+
+	\subsection{Git}
+	\label{sec:git}
+		Git vychází z komerčního VCS BitKeeper, a zakládá si na několika klíčových požadavcích: 
+		\begin{itemize}
+			\item Rychlost
+			\item Jednoduchý návrh
+			\item Silná podpora nelineárního vývoje pro tisícovky paralelních větví
+			\item Plně distribuovaný
+			\item Schopnost efektivně spravovat velké projekty jako je kernel Linuxu
+		\end{itemize}
+
+		Oproti ostatním VCS které uchovávají historii jako seznam změn Git uchovává historii jako sérii snímků (snapshots). při každém commitu se uloží kompletní stav všech souborů a ne pouze změny. Když se v souboru oproti předchozímu snaphsotu nic nezměnilo tak se ukládá pouze odkaz na předchozí soubor. Tímto přístupem je docíleno efektivního větvení a slučování.
+
+		V základu pracuje Git se třemi stavy souborů:
+		\begin{itemize}
+			\item Modifikované (modified) - soubor byl změněn a ještě se neuložil do historie
+			\item Připravené (staged) - soubor je označen pro zarnutí do dalšího commitu
+			\item Zapsané (committed) - změny jsou zaznamenány v historii
+		\end{itemize}
+
+		Z těchto stavů vyplývají i hlavní oblasti projektu na disku:
+		\begin{itemize}
+			\item Pracovní adresář (working directory) - obsahuje lokální kopii jedné verze projektu. Tyto soubory jsouvytaženy z lokální databáze git
+			\item Oblast připravených změn (Staging area) - je soubor v kterém jsou uloženy informace o tom co bude obsahovat příští commit
+			\item Adresář Git (Git directory) - obsahuje historii a metadata projektu
+		\end{itemize}
+
+		Mezi další specifika Gitu jsou že kromě distribuce dat na server a jejich synchonizace jsou všechny operace lokální. Tímto se dosahuje vysoké rychlosti a taktéž možnosti plně pracovat odkudkoliv bez nutnosti být připojen k síti. 
+
+		Než se v gitu cokoliv uloží tak se nejdříve spočítá kontrolní součet (checksum) pomocí algoritmu SHA-1 který se pak používá k odkazování na uložená data. títo se zajistí že nelze provést jakoukoli operaci o které by git nevěděl a tím pádem data jsou vždy konzistentní.
+
+		Když se v gitu provádí jakákoliv operace tak se data do databáze vždy přidávají. Samozřejmě lze systém přimět aby udělal něco co nelze vzít zpět ale je to obtížné. Samořejmě data lze poničit jako v jiných VCS ale když už jsou commitnuté tak se nedají ztratit. Díky tomu můžeme experimentovat a zkoušet různé věci bez starostí že něco ztratíme.
+
+	\subsection{Programovatelný přístup k git}
 
 \endinput

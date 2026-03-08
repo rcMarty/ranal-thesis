@@ -1,4 +1,4 @@
-\documentclass[czech,master]{resources/diploma/diploma}
+\documentclass[czech,master]{./resources/diploma/diploma}
 
 % Sablonove baliky
 \usepackage[autostyle=true,czech=quotes]{csquotes} % korektni sazba uvozovek, podpora pro balik biblatex
@@ -16,7 +16,6 @@
 \usepackage{array} % schovavani sloupcu v tabulkach
 \usepackage[linesnumbered,tworuled,vlined]{algorithm2e} % pseudokod
 \usepackage{acro} % balík pro lepší práci s akronymy
-\usepackage{svg} % pro vkládání SVG obrázků
 
 % Pozadovane vstupy pro generovani titulnich stran.
 \ThesisAuthor{Martin Korotwitschka}
@@ -44,7 +43,9 @@ Abstract Ranalu but in english.
 \EnglishKeywords{git, github, rust, monitoring }
 
 \input{./resources/acronyms.tex}
-\addbibresource{resources/sauce.bib}
+\input{./resources/commands.tex}
+\addbibresource{./resources/bib/books.bib}
+\addbibresource{./resources/bib/sauce.bib}
 
 
 % Minted things
@@ -75,24 +76,7 @@ Abstract Ranalu but in english.
 % Uprava hloubky obsahu - pozdeji smazat !
 \setcounter{tocdepth}{3}
 
-% Custom reference
-\newcommand{\customref}[2]{\hyperref[#2]{#1~\ref*{#2}}}
-\newcommand{\chapterref}[1]{(\hyperref[#1]{Kapitola~\ref*{#1}})}
-\newcommand{\imageref}[1]{(\hyperref[#1]{Obrázek~\ref*{#1}})}
-\newcommand{\tableref}[1]{(\hyperref[#1]{Tabulka~\ref*{#1}})}
-\newcommand{\listingref}[1]{(\hyperref[#1]{Výpis~\ref*{#1}})}
-\newcommand{\glsref}[1]{\textit{\gls{#1}}}
-\newcommand{\gameref}[1]{\textit{#1}}
-\newcommand{\attr}[1]{(\texttt{#1})}
-\newcommand{\devTool}[2]{\textit{#1}\footnote{\href{#2}{#2}}}
 
-\newcommand{\todo}[1]{\noindent\textcolor{red}{TODO: #1}}
-
-% Custom command for inline code snippets
-\definecolor{codegray}{gray}{0.95}
-\newcommand{\code}[1]{%
-    \fcolorbox{black}{codegray}{\texttt{#1}}%
-}
 
 % Hide columns in tables
 \newcolumntype{H}{>{\setbox0=\hbox\bgroup}c<{\egroup}@{}}

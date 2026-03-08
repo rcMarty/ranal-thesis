@@ -28,8 +28,7 @@ jobs:
           root_file: main.tex
           working_directory: src
           args: -pdf -halt-on-error -synctex=1 -interaction=nonstopmode --shell-escape --enable-write18
-          extra_system_packages: 'inkscape openjdk17'
-          latexmk_use_xelatex: true
+          extra_system_packages: 'inkscape openjdk17 python3-pygments fonts-dejavu-core fonts-dejavu-extra'
 
       - name: Upload LaTeX PDF artifact
         uses: actions/upload-artifact@v4
