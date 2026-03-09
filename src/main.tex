@@ -29,21 +29,23 @@
 \ThesisAssignmentFileName{../ThesisSpecification_KOR0289.pdf}
 
 \Acknowledgement{%
-Děkuji, že mám ještě tolik času na dokončení této práce.
+  Děkuji, že mám ještě tolik času na dokončení této práce.
 }
 
 \CzechAbstract{%
-Abstract Ranalu
+  Abstract Ranalu
 }
 \CzechKeywords{git, github, rust, monitoring }
 
 \EnglishAbstract{%
-Abstract Ranalu but in english.
+  Abstract Ranalu but in english.
 }
 \EnglishKeywords{git, github, rust, monitoring }
 
+\acsetup{make-links=true}
 \input{./resources/acronyms.tex}
 \input{./resources/commands.tex}
+
 \addbibresource{./resources/bib/books.bib}
 \addbibresource{./resources/bib/sauce.bib}
 
@@ -99,6 +101,10 @@ Abstract Ranalu but in english.
 % Seznam výpisů zdrojového kódu
 \addcontentsline{toc}{chapter}{Seznam výpisů zdrojového kódu}
 \listoflistings
+\clearpage
+
+% Seznam akronymů
+\printacronyms[name={Seznam zkratek}]
 \clearpage
 
 % Text

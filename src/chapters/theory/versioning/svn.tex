@@ -1,0 +1,56 @@
+%region Apache Subversion
+\section{Apache Subversion}
+\label{sec:svn}
+Apache Subversion (zkráceně \SVN) je \VCS, který vznikl v~roce 2004 jako náhrada za \CVS~\cite{svnbook17}. Jedná se o~open-source centralizovaný verzovací systém.
+
+Jeho hlavní implementační specifika jsou: atomické revize a~transakce, větvení pomocí \textit{levných kopií} (Cheap copies), verzování adresářů a~metadat, podpora binárních souborů, podpora neslučitelných souborů a~přístup k~datům přes \HTTP, \HTTPS a~protokol SVN~\cite{svnbook17}.
+
+%region Globální revize a transakce
+\subsection*{Globální revize a transakce}
+\label{sec:svn_revisions}
+\SVN používá globální revize napříč všemi soubory. U~starších systémů (např.\ \CVS) byly revize vedeny samostatně pro každý soubor, přičemž každý soubor měl vlastní historii a~číslo revize.
+
+Každý zápis do repozitáře je v~\SVN atomický a~je zaznamenán jako jedna revize zahrnující všechny dotčené soubory. To znamená, že zápis se buď provede celý, nebo se neprovede vůbec. Každá revize má jeden globální identifikátor, který jednoznačně reprezentuje stav celého repozitáře~\cite{svnbook17}.
+
+%endregion
+
+%region Větvení pomocí levných kopií
+\subsection*{Větvení pomocí levných kopií}
+\label{sec:svn_branching}
+Větvení v~\SVN nemá žádnou speciální interní reprezentaci. Větve jsou realizovány na úrovni adresářové struktury uživateli (typicky \code{/branches}, \code{/tags}, \code{/trunk}).
+
+Větvení se provádí příkazem \code{svn copy}. Interně nedochází k~fyzické duplikaci dat ale vytvoří se pouze symbolický odkaz na původní data v~dané revizi. Tvorba nové větve je tímto způsobem velice rychlá~\cite{svnbook17}.
+
+%endregion
+
+%region Verzování adresářů a metadat
+\subsection*{Verzování adresářů a metadat}
+\label{sec:svn_metadata}
+\SVN odstraňuje nedostatek starších systémů, které verzovaly pouze obsah souborů, nikoli strukturu adresářů.
+
+Přesuny, přejmenování a~kopírování souborů jsou verzovány a~zachovávají návaznost na historii souboru. \SVN dále umožňuje připojit k~adresáři metadata ve formátu klíč:hodnota (např.\ \code{svn:ignore}, \code{svn:externals}), přičemž tato metadata jsou verzována stejně jako samotný obsah souborů~\cite{svnbook17}.
+
+%endregion
+
+%region Podpora libovolných typů souborů
+\subsection*{Podpora libovolných typů souborů}
+\label{sec:svn_binary}
+Systém byl navržen tak, aby efektivně pracoval i~se soubory jinými než textovými. U~binárních souborů jsou ukládány pouze změny oproti předchozí revizi, nikoli celá kopie souboru, čímž se předchází neúměrnému nárůstu velikosti repozitáře~\cite{svnbook17}.
+
+%endregion
+
+%region Uzamykání neslučitelných souborů
+\subsection*{Uzamykání neslučitelných souborů}
+\label{sec:svn_locking}
+Při vývoji se může stát, že pracujeme se soubory, které algoritmicky sloučit nelze, jako jsou například obrázky nebo zkompilované binární soubory. \SVN umožňuje takovéto soubory uzamknout na úrovni serveru, aby je ostatní uživatelé nemohli přepisovat, dokud není tento zámek opět uvolněn.
+
+%endregion
+
+%region Přístup k datům
+\subsection*{Přístup k datům}
+\label{sec:svn_access}
+\SVN nabízí flexibilní metody přístupu jak přes \HTTP/\HTTPS obohacené o~verzovací funkce nebo přes vlastní protokol svnserve běžící nad \TCPIP~\cite{svnbook17}, který je lehčí než \HTTP/\HTTPS.
+
+%endregion
+
+%endregion
