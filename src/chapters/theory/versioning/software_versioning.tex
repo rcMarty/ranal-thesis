@@ -1,7 +1,3 @@
-%region Verzování
-\chapter{Verzování}
-\label{sec:versioning}
-Tato kapitola se věnuje verzování softwaru a jeho významu pro vývoj a~údržbu projektů. Dále je popsán konkrétní verzovací nástroj Git, jeho funkce a~programovatelný přístup k~jeho datům.
 
 %region Verzování softwaru
 \section{Verzování softwaru}
@@ -12,7 +8,7 @@ Verzování je proces správy a~sledování změn v~projektu~\cite{ernst2024vcs}
 
 \VCS řeší také problém správy verzí, kdy před jeho zavedením bylo nutné uchovávat mnoho kopií téhož projektu s~různými popisky identifikujícími jejich verzi, což vyžadovalo nadměrnou disciplínu a~výrazně více úložného prostoru. U~\VCS jsou zpravidla ukládány pouze skutečné změny oproti předchozí verzi, nikoli celá kopie projektu, přičemž vše je spravováno interně daným nástrojem a~uživateli tak odpadá starost s~organizací a~ukládáním jednotlivých verzí.
 
-Další vlastností \VCS je možnost souběžné práce více uživatelů na stejných souborech. \VCS umožňuje řešit konflikty (tzv.\ \textit{merge konflikty}), které vznikají při souběžné úpravě stejného souboru více uživateli~\cite{sink2011version}.
+Další vlastností \VCS je možnost souběžné práce více uživatelů na stejných souborech. \VCS \\ umožňuje řešit konflikty (tzv.\ \textit{merge konflikty}), které vznikají při souběžné úpravě stejného souboru více uživateli~\cite{sink2011version}.
 
 \customref{Na obrázku}{fig:revision_controlled_project_visualization} je znázorněn příklad typické struktury historie projektu řízeného verzovacím systémem. Základní ideální struktura je lineární graf, tj.\ řada uzlů za sebou, kde každý další vychází z~předchozího. Projekt má hlavní větev (Trunk), z~níž se dále větví ostatní větve (Branches), například pro vývoj nové funkcionality. Větve se poté slučují zpět (Merges) a~vznikají nové verze projektu. Z~pohledu teorie grafů se jedná o~acyklický orientovaný graf. Může se stát, že nově vyvíjená funkcionalita je nevyhovující, a~tak vzniká slepá větev (Discontinued development branch). Jakmile je dosažen požadovaný stav v~hlavní větvi, provádí se tzv.\ tagování (Tags). Tag většinou označuje novou verzi projektu nebo jiný důležitý milník.
 
@@ -49,4 +45,4 @@ Rozdíl je patrný i~v~principu řešení konfliktů a~slučování větví. Cen
 
 %endregion
 
-%endregion
+\endinput

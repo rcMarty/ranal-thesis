@@ -39,7 +39,7 @@ Při jakékoliv operaci v~Gitu jsou data do databáze vždy přidávána. Ovšem
 Gitová databáze je fundamentálně založena na principu souborového systému s adresovatelným obsahem jako úložiště klíč--hodnota, kde klíčem je hash obsahu a hodnotou je samotný soubor. Tento klíč je při každém commitu vypočítáván a vrácen pro pozdější použití.
 Klíč je generován pomocí algoritmu \SHA-1, který vytvoří 40znakový řetězec z obsahu souboru~\cite{chacon2014progit}.
 
-Fyzicky jsou tyto objekty ukládány do složky \code{.git/objects}. V~této složce jsou podsložky pojmenované prvními dvěma znaky hashe a v~těchto podsložkách jsou zkomprimované soubory s~daty pojmenované zbylými 38 znaky hashe~\cite{chacon2014progit}. Například objekt s~hashem \code{e965c8f1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6} bude uložen jako \code{.git/objects/e9/65c8f1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6}.
+Fyzicky jsou tyto objekty ukládány do složky \code{.git/objects}. V~této složce jsou podsložky pojmenované prvními dvěma znaky hashe a v~těchto podsložkách jsou zkomprimované soubory s~daty pojmenované zbylými 38 znaky hashe~\cite{chacon2014progit}. Například objekt s~hashem \\ \code{e965c8f1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6} bude uložen jako \\ \code{.git/objects/e9/65c8f1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6}.
 
 %endregion
 
@@ -82,6 +82,11 @@ I~když stromový objekt zachycuje snímek projektu, neobsahuje kontext o~tom, k
 % - Dát do kontrastu s SVN (kde to byly adresářové kopie).
 % - Vysvětlit, že větev v Gitu je pouhý lehký textový soubor obsahující 40 znaků (hash commitu).
 % - Zmínit soubor HEAD, který určuje, na jaké větvi se uživatel právě nachází.
+Dřívější \VCS{}, jako například \SVN{}, přistupovaly k~větvím jako k~fyzickým kopiím dat. To znamená, že pro vytvoření nové větve bylo nutné zkopírovat celý projekt do nové složky, což bylo prostorově i~časově náročné~\cite{chacon2014progit}.
+
+V~Gitu jsou naproti tomu větve pouze pohyblivé ukazatele směřující na konkrétní commit. Fyzicky se jedná o~jeden textový soubor ve složce \code{.git/refs/heads/}, který obsahuje pouze hash commitu. Vytvoření větve tedy fyzicky znamená vytvoření nového souboru s~hashem commitu, což je velice rychlé bez ohledu na velikost projektu~\cite{chacon2014progit}.
+
+Aby Git dokázal určit, na jaké větvi se uživatel právě nachází, využívá speciální ukazatel zvaný HEAD. Tento ukazatel je textový soubor uložen v~\code{.git/HEAD}, který namísto přímého hashe obsahuje symbolickou referenci na aktuální větev. Když uživatel vytvoří nový commit, Git přečte HEAD, zjistí aktuální větev a~posune její ukazatel tak, aby odkazoval na nově vzniklý commit~\cite{chacon2014progit}.
 
 %endregion
 
@@ -91,7 +96,25 @@ I~když stromový objekt zachycuje snímek projektu, neobsahuje kontext o~tom, k
 % CO ZDE PSÁT:
 % - Zodpovědět otázku: "Když Git ukládá celé snímky, proč repozitář nezabírá terabyty?"
 % - Zmínit Garbage Collection (git gc) a Packfiles (zabalení starých objektů a použití delta komprese).
+Se skutečností, že Git při každém commitu ukládá celé snímky projektu jako plné bloby, může vyvstat otázka ohledně celkové velikosti repozitáře. Git proto rozlišuje dva způsoby uložení objektů: volné objekty (loose objects) pro nově vzniklé objekty a~zabalené objekty (packed objects) pro dlouhodobé úložiště~\cite{chacon2014progit}.
+
+Při běžné práci je každý objekt zkomprimován pomocí knihovny zlib a~uložen jako samostatný volný objekt. Liší se pouze metadata o~tom, o~jaký typ objektu se jedná~\cite{chacon2014progit}.
+
+Když počet volných objektů překročí určitou mez, Git automaticky spustí údržbu. Během ní jsou všechny volné objekty zabaleny do jednoho velkého binárního souboru zvaného packfile. Tato operace se většinou spouští automaticky na pozadí při příkazu \code{git push} nebo ji lze vyvolat ručně příkazem \code{git gc}~\cite{chacon2014progit}.
+
+Při vytváření packfilu je využívána delta komprese. U~tohoto způsobu komprese je nejnovější verze souboru uložena v~plném rozsahu a~všechny předchozí verze jsou uchovávány jako seznam změn vůči nejnovější verzi. Tím je zajištěn rychlý přístup k~posledním změnám, které uživatel nejčastěji potřebuje, zatímco méně využívaná historie se dopočítává, a~zároveň se výrazně zmenší celková velikost databáze~\cite{chacon2014progit}.
+
+%endregion
+
+%region Programovatelný přístup ke Gitu
+\subsection{Programovatelný přístup ke Gitu}
+\label{sec:git_api}
+Programovatelný přístup ke Gitu je zajištěn pomocí knihovny \devTool{libgit2}{https://libgit2.org/}. Jedná se o~knihovnu napsanou v~jazyce C bez jakýchkoli externích závislostí, se zaměřením na programátorsky přívětivé \API{}.
+Knihovna poskytuje také tzv. language bindings pro různé jazyky, včetně Rustu, Pythonu, Ruby a~dalších~\todo{Doplnit citaci}. Díky tomu je možné využívat Git pohodlně v~ostatních aplikacích bez nutnosti znalosti jazyka C.
+
+Jedna z~nejzajímavějších vlastností této knihovny je podpora tzv. backendů (pluginů). Libgit2 umožňuje vývojářům napojit vlastní úložiště pro různé typy operací a~vytvářet vlastní pravidla pro konfiguraci, ukládání referencí nebo i~pro databázi objektů~\todo{Doplnit citaci}.
 
 %endregion
 
 %endregion
+\endinput
